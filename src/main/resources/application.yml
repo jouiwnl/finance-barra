@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://babar.db.elephantsql.com:5432/psglecol
-    username: psglecol
-    password: mT8HcCQinH0zTtiFTQAOvASUshuVN09V
+    url:
+    username:
+    password:
     hikari:
       minimum-idle: 3
       maximum-pool-size: 5
