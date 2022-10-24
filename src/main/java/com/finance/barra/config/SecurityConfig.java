@@ -6,7 +6,6 @@ import com.finance.barra.security.JWTManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -31,35 +30,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private JWTManager jwtManager;
 
-    private static final String[] PUBLIC_MATCHERS_GET = {
-            "/centros-custos/**",
-            "/funcionarios/**",
-            "/ordens/**"
-    };
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable();
-        http.authorizeRequests()
-                .antMatchers(HttpMethod.GET, PUBLIC_MATCHERS_GET)
-                .permitAll();
-
-        http.authorizeRequests()
-                .antMatchers(HttpMethod.PUT, PUBLIC_MATCHERS_GET)
-                .permitAll();
-
-        http.authorizeRequests()
-                .antMatchers(HttpMethod.POST, PUBLIC_MATCHERS_GET)
-                .permitAll();
-
-        http.authorizeRequests()
-                .antMatchers(HttpMethod.DELETE, PUBLIC_MATCHERS_GET)
-                .permitAll();
-
-        http.authorizeRequests()
-                .anyRequest()
-                .authenticated();
-
+        http.authorizeRequests() .anyRequest().authenticated();
         http.addFilter(new JWTAuthenticationFilter(this.authenticationManager(), this.jwtManager));
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilter(new JWTAuthorizationFilter(this.authenticationManager(), jwtManager, userDetailsService));
