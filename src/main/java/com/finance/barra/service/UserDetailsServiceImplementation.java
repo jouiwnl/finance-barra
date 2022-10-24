@@ -10,6 +10,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserDetailsServiceImplementation implements UserDetailsService {
 
@@ -18,6 +20,8 @@ public class UserDetailsServiceImplementation implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String user) throws UsernameNotFoundException {
-        return new User(repository.findOne(Funcionario.class, QFuncionario.funcionario.usuario.eq(user)));
+        return Optional.ofNullable(repository.findOne(Funcionario.class, QFuncionario.funcionario.usuario.eq(user)))
+                .map(User::new)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
     }
 }

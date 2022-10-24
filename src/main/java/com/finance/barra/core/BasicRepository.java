@@ -67,10 +67,6 @@ public class BasicRepository {
     }
 
     protected void handlerRemoveException(PersistenceException e) {
-        if (!(e.getCause() instanceof ConstraintViolationException)) {
-            throw e;
-        }
-
         SQLException violationException = (SQLException) e.getCause().getCause();
         if (POSTGRES_23503_RESTRICAO_INTEGRIDADE.equals(violationException.getSQLState())) {
             throw new ValidationException(FK_MESSAGE_DEFAULT);

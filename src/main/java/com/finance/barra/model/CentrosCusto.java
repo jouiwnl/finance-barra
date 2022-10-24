@@ -2,11 +2,8 @@ package com.finance.barra.model;
 
 import com.finance.barra.core.DatabaseEntity;
 import lombok.*;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -27,8 +24,27 @@ public class CentrosCusto implements DatabaseEntity<Long> {
     @Column(name = "sigla")
     private String sigla;
 
-    @OneToMany(mappedBy = "centrosCusto", orphanRemoval = true, fetch = FetchType.EAGER)
-    @Fetch(FetchMode.SELECT)
-    private List<Sintetico> sinteticos = new ArrayList<>();
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinTable(
+            name = "centros_custo_sinteticos",
+            joinColumns = {
+                    @JoinColumn(name = "id_sinteticos", referencedColumnName = "id")
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(name = "id_centros_custos", referencedColumnName = "id")
+            }
+    )
+    private List<Sintetico> sinteticos;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "centrosCusto")
+    private List<Lancamento> lancamentos;
+
+    @PreUpdate
+    @PrePersist
+    public void setSinteticos() {
+        if (!getSinteticos().isEmpty()) {
+            getSinteticos().forEach(a -> a.getCentrosCusto().add(this));
+        }
+    }
 
 }

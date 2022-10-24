@@ -19,6 +19,8 @@ public class LancamentoController {
     @Autowired
     private BasicRepository repository;
 
+    private LancamentoDto.RepresentationBuilder lancamentosRB;
+
     @PostMapping
     @Transactional(propagation = Propagation.REQUIRED)
     public Lancamento create(@RequestBody Lancamento lancamento) {
@@ -30,7 +32,7 @@ public class LancamentoController {
     public List<LancamentoDto> findAll() {
         return this.repository.findAll(Lancamento.class)
                 .stream()
-                .map(LancamentoDto::of)
+                .map(lancamentosRB::of)
                 .collect(Collectors.toList());
     }
 

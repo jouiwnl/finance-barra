@@ -2,17 +2,14 @@ package com.finance.barra.dto;
 
 import com.finance.barra.model.PlanosContas;
 import lombok.*;
-
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import org.springframework.stereotype.Component;
 
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Component
 public class PlanosContasDto {
 
     private Long id;
@@ -20,13 +17,25 @@ public class PlanosContasDto {
     private String descricao;
     private String alocacaoContabil;
 
-    public static PlanosContasDto of(PlanosContas planosContas) {
-        return PlanosContasDto.builder()
-                .id(planosContas.getId())
-                .alocacaoContabil(planosContas.getAlocacaoContabil())
-                .codigo(planosContas.getCodigo())
-                .descricao(planosContas.getDescricao())
-                .build();
+    @Component
+    public class RepresentationBuilder {
+        public PlanosContasDto of(PlanosContas planosContas) {
+            return PlanosContasDto.builder()
+                    .id(planosContas.getId())
+                    .alocacaoContabil(planosContas.getAlocacaoContabil())
+                    .codigo(planosContas.getCodigo())
+                    .descricao(planosContas.getDescricao())
+                    .build();
+        }
+
+        public PlanosContas from(PlanosContasDto dto) {
+            return PlanosContas.builder()
+                    .id(dto.getId())
+                    .alocacaoContabil(dto.getAlocacaoContabil())
+                    .codigo(dto.getCodigo())
+                    .descricao(dto.getDescricao())
+                    .build();
+        }
     }
 
 }

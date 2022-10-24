@@ -4,6 +4,7 @@ import com.finance.barra.core.DatabaseEntity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -21,11 +22,29 @@ public class Sintetico implements DatabaseEntity<Long> {
     @Column(name = "nome")
     private String nome;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_centros_custos", referencedColumnName = "id")
-    private CentrosCusto centrosCusto;
+    @ManyToMany(mappedBy = "sinteticos")
+    private List<CentrosCusto> centrosCusto;
 
-    @OneToMany(mappedBy = "sintetico", orphanRemoval = true, fetch = FetchType.EAGER)
-    private List<Analitico> analiticos;
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinTable(
+            name = "sinteticos_analiticos",
+            joinColumns = {
+                    @JoinColumn(name = "id_analiticos", referencedColumnName = "id")
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(name = "id_sinteticos", referencedColumnName = "id")
+            }
+    )
+    private List<Analitico> analiticos = new ArrayList<>();
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "sintetico")
+    private List<Lancamento> lancamentos;
+
+    @PreUpdate
+    @PrePersist
+    public void setAnaliticos() {
+        if (!getAnaliticos().isEmpty()) {
+            getAnaliticos().forEach(a -> a.getSinteticos().add(this));
+        }
+    }
 }
