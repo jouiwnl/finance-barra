@@ -2,8 +2,8 @@ package com.finance.barra.config;
 
 import com.finance.barra.core.BasicRepository;
 import com.finance.barra.enums.TipoCargo;
-import com.finance.barra.model.Funcionario;
-import com.finance.barra.model.QFuncionario;
+import com.finance.barra.model.QUsuario;
+import com.finance.barra.model.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -30,16 +30,16 @@ public class AdminConfig {
     @EventListener(ApplicationReadyEvent.class)
     @Transactional
     public void verifyRootUser() {
-        Funcionario funcionario =
-                repository.findOne(Funcionario.class, QFuncionario.funcionario.usuario.eq(adminUsername));
+        Usuario usuario =
+                repository.findOne(Usuario.class, QUsuario.usuario.user.eq(adminUsername));
 
-        if (funcionario != null) {
+        if (usuario != null) {
             return;
         }
 
-        Funcionario admin = Funcionario.builder()
+        Usuario admin = Usuario.builder()
                 .nomeCompleto("Usuário administrador")
-                .usuario(adminUsername)
+                .user(adminUsername)
                 .senha(encoder.encode(adminSecret))
                 .tipo(TipoCargo.ADM)
                 .build();

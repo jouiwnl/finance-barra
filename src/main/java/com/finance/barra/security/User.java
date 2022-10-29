@@ -1,7 +1,7 @@
 package com.finance.barra.security;
 
 import com.finance.barra.enums.TipoCargo;
-import com.finance.barra.model.Funcionario;
+import com.finance.barra.model.Usuario;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,11 +21,11 @@ public class User implements UserDetails {
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
 
-    public User(Funcionario funcionario) {
-        this.id = funcionario.getId();
-        this.username = funcionario.getUsuario();
-        this.password = funcionario.getSenha();
-        this.authorities = Collections.singletonList(new SimpleGrantedAuthority(funcionario.getTipo().getDesc()));
+    public User(Usuario usuario) {
+        this.id = usuario.getId();
+        this.username = usuario.getUser();
+        this.password = usuario.getSenha();
+        this.authorities = Collections.singletonList(new SimpleGrantedAuthority(usuario.getTipo().getDesc()));
     }
 
     public boolean hasRole(TipoCargo tipoCargo) {

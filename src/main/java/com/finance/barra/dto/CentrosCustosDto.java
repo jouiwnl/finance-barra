@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,7 +24,9 @@ public class CentrosCustosDto implements Serializable {
     private Long id;
     private String nome;
     private String sigla;
-    private List<SinteticosDto> sinteticos;
+    private List<SinteticosDto> sinteticos = new ArrayList<>();
+    private Long value;
+    private String label;
 
     @Component
     public class RepresentationBuilder {
@@ -34,25 +37,31 @@ public class CentrosCustosDto implements Serializable {
         private SinteticosDto.RepresentationBuilder sinteticosRB;
 
         public CentrosCustosDto of(CentrosCusto centro) {
-            List<SinteticosDto> sinteticos = centro.getSinteticos()
-                    .stream()
-                    .map(s -> repository.findOne(Sintetico.class, QSintetico.sintetico.id.eq(s.getId())))
-                    .map(sinteticosRB::of)
-                    .collect(Collectors.toList());
+            List<SinteticosDto> sinteticos = centro.getSinteticos() != null
+                    ? centro.getSinteticos()
+                        .stream()
+                        .map(s -> repository.findOne(Sintetico.class, QSintetico.sintetico.id.eq(s.getId())))
+                        .map(sinteticosRB::of)
+                        .collect(Collectors.toList())
+                    : new ArrayList<>();
 
             return CentrosCustosDto.builder()
                     .id(centro.getId())
                     .nome(centro.getNome())
                     .sigla(centro.getSigla())
                     .sinteticos(sinteticos)
+                    .label(centro.getNome())
+                    .value(centro.getId())
                     .build();
         }
 
         public CentrosCusto from(CentrosCustosDto dto) {
-            List<Sintetico> sinteticos = dto.getSinteticos()
-                    .stream()
-                    .map(s -> repository.findOne(Sintetico.class, QSintetico.sintetico.id.eq(s.getId())))
-                    .collect(Collectors.toList());
+            List<Sintetico> sinteticos = dto.getSinteticos() != null
+                    ? dto.getSinteticos()
+                        .stream()
+                        .map(s -> repository.findOne(Sintetico.class, QSintetico.sintetico.id.eq(s.getId())))
+                        .collect(Collectors.toList())
+                    : new ArrayList<>();
 
             return CentrosCusto.builder()
                     .id(dto.getId())
@@ -67,6 +76,8 @@ public class CentrosCustosDto implements Serializable {
                     .id(centro.getId())
                     .nome(centro.getNome())
                     .sigla(centro.getSigla())
+                    .label(centro.getNome())
+                    .value(centro.getId())
                     .build();
         }
 

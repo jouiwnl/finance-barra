@@ -7,12 +7,10 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public enum TipoLancamento {
+public enum TipoPessoa {
 
-    GASTOS_CORRENTES("G", "Gastos correntes"),
-    FUNCIONARIO("F", "Pessoas"),
-    FORNECEDOR("N", "Fornecedores"),
-    IMPOSTOS("I", "Gastos correntes");
+    FUNCIONARIO("U", "Funcionário"),
+    FORNECEDOR("F", "Fornecedor");
 
     private String value;
     private String desc;

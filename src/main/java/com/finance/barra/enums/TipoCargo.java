@@ -6,7 +6,7 @@ import lombok.Getter;
 public enum TipoCargo {
     ADM(1, "ROLE_ADMIN"),
     RH(2, "ROLE_RH"),
-    PAGADORES(3, "ROLE_PAGADORES");
+    FINANCEIRO(3, "ROLE_FINANCEIRO");
 
     private Integer cod;
     private String desc;

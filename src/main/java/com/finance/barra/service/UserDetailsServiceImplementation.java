@@ -1,9 +1,9 @@
 package com.finance.barra.service;
 
-import com.finance.barra.model.QFuncionario;
-import com.finance.barra.security.User;
 import com.finance.barra.core.BasicRepository;
-import com.finance.barra.model.Funcionario;
+import com.finance.barra.model.QUsuario;
+import com.finance.barra.model.Usuario;
+import com.finance.barra.security.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -20,7 +20,7 @@ public class UserDetailsServiceImplementation implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String user) throws UsernameNotFoundException {
-        return Optional.ofNullable(repository.findOne(Funcionario.class, QFuncionario.funcionario.usuario.eq(user)))
+        return Optional.ofNullable(repository.findOne(Usuario.class, QUsuario.usuario.user.eq(user)))
                 .map(User::new)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
     }

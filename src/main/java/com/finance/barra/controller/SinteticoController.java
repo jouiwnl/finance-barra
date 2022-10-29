@@ -69,4 +69,13 @@ public class SinteticoController {
     public SinteticosDto findOne(@PathVariable("id") Long id) {
         return sinteticosRB.of(this.repository.findOne(Sintetico.class, QSintetico.sintetico.id.eq(id)));
     }
+
+    @GetMapping("/getByCentros/{idCentros}")
+    @Transactional(readOnly = true)
+    public List<SinteticosDto> findBySintetico(@PathVariable("idCentros") Long idCentros) {
+        return this.repository.findAll(Sintetico.class, QSintetico.sintetico.centrosCusto.any().id.eq(idCentros))
+                .stream()
+                .map(sinteticosRB::of)
+                .collect(Collectors.toList());
+    }
 }

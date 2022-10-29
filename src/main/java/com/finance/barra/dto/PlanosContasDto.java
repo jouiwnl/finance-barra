@@ -16,6 +16,8 @@ public class PlanosContasDto {
     private String codigo;
     private String descricao;
     private String alocacaoContabil;
+    private String label;
+    private Long value;
 
     @Component
     public class RepresentationBuilder {
@@ -25,6 +27,8 @@ public class PlanosContasDto {
                     .alocacaoContabil(planosContas.getAlocacaoContabil())
                     .codigo(planosContas.getCodigo())
                     .descricao(planosContas.getDescricao())
+                    .value(planosContas.getId())
+                    .label(planosContas.getDescricao())
                     .build();
         }
 

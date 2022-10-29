@@ -24,6 +24,8 @@ public class AnaliticosDto {
     private Long id;
     private String nome;
     private List<SinteticosDto> sinteticos = new ArrayList<>();
+    private Long value;
+    private String label;
 
     @Component
     public class RepresentationBuilder {
@@ -35,24 +37,30 @@ public class AnaliticosDto {
         private SinteticosDto.RepresentationBuilder sinteticosRB;
 
         public AnaliticosDto of(Analitico analitico) {
-            List<SinteticosDto> sinteticos = analitico.getSinteticos()
-                    .stream()
-                    .map(s -> this.repository.findOne(Sintetico.class, QSintetico.sintetico.id.eq(s.getId())))
-                    .map(sinteticosRB::associacao)
-                    .collect(Collectors.toList());
+            List<SinteticosDto> sinteticos = analitico.getSinteticos() != null
+                    ? analitico.getSinteticos()
+                        .stream()
+                        .map(s -> this.repository.findOne(Sintetico.class, QSintetico.sintetico.id.eq(s.getId())))
+                        .map(sinteticosRB::associacao)
+                        .collect(Collectors.toList())
+                    : new ArrayList<>();
 
             return AnaliticosDto.builder()
                     .id(analitico.getId())
                     .nome(analitico.getNome())
                     .sinteticos(sinteticos)
+                    .label(analitico.getNome())
+                    .value(analitico.getId())
                     .build();
         }
 
         public Analitico from(AnaliticosDto dto) {
-            List<Sintetico> sinteticos = dto.getSinteticos()
-                    .stream()
-                    .map(s -> this.repository.findOne(Sintetico.class, QSintetico.sintetico.id.eq(s.getId())))
-                    .collect(Collectors.toList());
+            List<Sintetico> sinteticos = dto.getSinteticos() != null
+                    ? dto.getSinteticos()
+                        .stream()
+                        .map(s -> this.repository.findOne(Sintetico.class, QSintetico.sintetico.id.eq(s.getId())))
+                        .collect(Collectors.toList())
+                    : new ArrayList<>();
 
             return Analitico.builder()
                     .id(dto.getId())
@@ -62,16 +70,20 @@ public class AnaliticosDto {
         }
 
         public AnaliticosDto associacao(Analitico analitico) {
-            List<SinteticosDto> sinteticosDto = analitico.getSinteticos()
-                    .stream()
-                    .map(s -> this.repository.findOne(Sintetico.class, QSintetico.sintetico.id.eq(s.getId())))
-                    .map(sinteticosRB::associacao)
-                    .collect(Collectors.toList());
+            List<SinteticosDto> sinteticosDto = analitico.getSinteticos() != null
+                    ? analitico.getSinteticos()
+                        .stream()
+                        .map(s -> this.repository.findOne(Sintetico.class, QSintetico.sintetico.id.eq(s.getId())))
+                        .map(sinteticosRB::associacao)
+                        .collect(Collectors.toList())
+                    : new ArrayList<>();
 
             return AnaliticosDto.builder()
                     .id(analitico.getId())
                     .nome(analitico.getNome())
                     .sinteticos(sinteticosDto)
+                    .label(analitico.getNome())
+                    .value(analitico.getId())
                     .build();
         }
     }

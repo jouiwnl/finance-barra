@@ -1,10 +1,13 @@
 package com.finance.barra.controller;
 
 import com.finance.barra.core.BasicRepository;
-import com.finance.barra.dto.LancamentoDto;
+import com.finance.barra.dto.BancosDto;
+import com.finance.barra.dto.ImpostosDto;
 import com.finance.barra.exceptions.ControllerException;
-import com.finance.barra.model.Lancamento;
-import com.finance.barra.model.QLancamento;
+import com.finance.barra.model.Banco;
+import com.finance.barra.model.Imposto;
+import com.finance.barra.model.QBanco;
+import com.finance.barra.model.QImposto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,34 +19,34 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @CrossOrigin("*")
-@RequestMapping("/lancamentos")
+@RequestMapping("/impostos")
 @RestController
-public class LancamentoController {
+public class ImpostoController {
 
     @Autowired
     private BasicRepository repository;
 
     @Autowired
-    private LancamentoDto.RepresentationBuilder lancamentosRB;
+    private ImpostosDto.RepresentationBuilder impostosRB;
 
     @PostMapping
     @Transactional(propagation = Propagation.REQUIRED)
-    public LancamentoDto create(@RequestBody LancamentoDto lancamento) {
-        Lancamento entity = lancamentosRB.from(lancamento);
-        return lancamentosRB.of(this.repository.save(entity));
+    public ImpostosDto create(@RequestBody ImpostosDto imposto) {
+        Imposto entity = impostosRB.from(imposto);
+        return impostosRB.of(this.repository.save(entity));
     }
 
     @PutMapping("{id}")
     @Transactional(propagation = Propagation.REQUIRED)
-    public LancamentoDto update(@PathVariable("id") Long id, @RequestBody LancamentoDto lancamento) {
-        Lancamento entity = lancamentosRB.from(lancamento);
-        return lancamentosRB.of(this.repository.save(entity));
+    public ImpostosDto update(@PathVariable("id") Long id, @RequestBody ImpostosDto imposto) {
+        Imposto entity = impostosRB.from(imposto);
+        return impostosRB.of(this.repository.save(entity));
     }
 
     @DeleteMapping("{id}")
     @Transactional(propagation = Propagation.REQUIRED)
     public ResponseEntity<Object> delete(@PathVariable("id") Long id) {
-        Lancamento finded = this.repository.findOne(Lancamento.class, QLancamento.lancamento.id.eq(id));
+        Imposto finded = this.repository.findOne(Imposto.class, QImposto.imposto.id.eq(id));
 
         try {
             this.repository.remove(finded);
@@ -56,17 +59,17 @@ public class LancamentoController {
 
     @GetMapping
     @Transactional(readOnly = true)
-    public List<LancamentoDto> findAll() {
-        return this.repository.findAll(Lancamento.class)
+    public List<ImpostosDto> findAll() {
+        return this.repository.findAll(Imposto.class)
                 .stream()
-                .map(lancamentosRB::of)
+                .map(impostosRB::of)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("{id}")
     @Transactional(readOnly = true)
-    public LancamentoDto findOne(@PathVariable("id") Long id) {
-        return lancamentosRB.of(this.repository.findOne(Lancamento.class, QLancamento.lancamento.id.eq(id)));
+    public ImpostosDto findOne(@PathVariable("id") Long id) {
+        return impostosRB.of(this.repository.findOne(Imposto.class, QImposto.imposto.id.eq(id)));
     }
 
 }

@@ -41,13 +41,22 @@ public class Lancamento implements DatabaseEntity<Long> {
     @Column(name = "documento")
     private String documento;
 
-    @Column(name = "beneficiario")
-    private String beneficiario;
-
     @Column(name = "assunto")
     private String assunto;
 
-    @Column(name = "total")
+    @Column(name = "total", scale = 2)
     private BigDecimal total;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_lancamentos_englobados", referencedColumnName = "id")
+    private LancamentoEnglobado lancamentoEnglobado;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_pessoas", referencedColumnName = "id")
+    private Pessoa pessoa;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_impostos", referencedColumnName = "id")
+    private Imposto imposto;
 
 }

@@ -12,8 +12,8 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "funcionarios")
-public class Funcionario implements Serializable, DatabaseEntity<Long> {
+@Entity(name = "usuarios")
+public class Usuario implements Serializable, DatabaseEntity<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +23,7 @@ public class Funcionario implements Serializable, DatabaseEntity<Long> {
     private String nomeCompleto;
 
     @Column(name = "usuario")
-    private String usuario;
+    private String user;
 
     @Column(name = "senha")
     private String senha;

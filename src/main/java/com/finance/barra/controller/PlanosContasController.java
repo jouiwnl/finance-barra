@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -60,6 +61,7 @@ public class PlanosContasController {
         return this.repository.findAll(PlanosContas.class)
                 .stream()
                 .map(planosContasRB::of)
+                .sorted(Comparator.comparing(PlanosContasDto::getId))
                 .collect(Collectors.toList());
     }
 
@@ -67,6 +69,12 @@ public class PlanosContasController {
     @Transactional(readOnly = true)
     public PlanosContasDto findOne(@PathVariable("id") Long id) {
         return planosContasRB.of(this.repository.findOne(PlanosContas.class, QPlanosContas.planosContas.id.eq(id)));
+    }
+
+    @GetMapping("/findByCode/{code}")
+    @Transactional(readOnly = true)
+    public PlanosContasDto findByCode(@PathVariable("code") String code) {
+        return planosContasRB.of(this.repository.findOne(PlanosContas.class, QPlanosContas.planosContas.codigo.equalsIgnoreCase(code)));
     }
 
 }
